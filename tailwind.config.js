@@ -47,7 +47,7 @@ export default {
         'xl': '0.75rem',
         '2xl': '1rem'
       },
-      animation: {
+animation: {
         'sparkle': 'sparkle 2s infinite',
         'pulse-glow': 'pulse-glow 2s infinite',
         'bounce-in': 'bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
