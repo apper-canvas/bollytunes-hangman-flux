@@ -7,10 +7,10 @@ const NotFound = () => {
   return (
     <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full text-center">
-        <motion.div
+<motion.div
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.8, ease: "back.out" }}
+          transition={{ duration: 0.8, ease: "backOut" }}
           className="mb-8"
         >
           <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center shadow-bollywood">
