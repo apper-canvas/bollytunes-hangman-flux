@@ -1,0 +1,122 @@
+[
+  {
+    "id": "movie_1",
+    "title": "Dilwale Dulhania Le Jayenge",
+    "songFile": "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+    "year": 1995,
+    "hints": ["Shah Rukh Khan", "Kajol", "Switzerland", "Love Story"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "movie_2",
+    "title": "Sholay",
+    "songFile": "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+    "year": 1975,
+    "hints": ["Amitabh Bachchan", "Dharmendra", "Dacoit", "Friendship"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "movie_3",
+    "title": "Mughal E Azam",
+    "songFile": "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+    "year": 1960,
+    "hints": ["Dilip Kumar", "Madhubala", "Historical", "Epic"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "movie_4",
+    "title": "Lagaan",
+    "songFile": "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+    "year": 2001,
+    "hints": ["Aamir Khan", "Cricket", "British Raj", "Oscar Nominated"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "movie_5",
+    "title": "Zindagi Na Milegi Dobara",
+    "songFile": "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+    "year": 2011,
+    "hints": ["Hrithik Roshan", "Spain", "Adventure", "Friends"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "movie_6",
+    "title": "Queen",
+    "songFile": "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+    "year": 2013,
+    "hints": ["Kangana Ranaut", "Paris", "Solo Trip", "Women Empowerment"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "movie_7",
+    "title": "Andhadhun",
+    "songFile": "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+    "year": 2018,
+    "hints": ["Ayushmann Khurrana", "Pianist", "Thriller", "Blind"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "movie_8",
+    "title": "Gully Boy",
+    "songFile": "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+    "year": 2019,
+    "hints": ["Ranveer Singh", "Alia Bhatt", "Rap", "Mumbai"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "movie_9",
+    "title": "Dangal",
+    "songFile": "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+    "year": 2016,
+    "hints": ["Aamir Khan", "Wrestling", "Daughters", "Sports"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "movie_10",
+    "title": "Tumhari Sulu",
+    "songFile": "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+    "year": 2017,
+    "hints": ["Vidya Balan", "Radio Jockey", "Family", "Comedy"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "movie_11",
+    "title": "Bajirao Mastani",
+    "songFile": "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+    "year": 2015,
+    "hints": ["Ranveer Singh", "Deepika Padukone", "Historical", "Maratha"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "movie_12",
+    "title": "Pink",
+    "songFile": "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+    "year": 2016,
+    "hints": ["Amitabh Bachchan", "Taapsee Pannu", "Court Drama", "No Means No"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "movie_13",
+    "title": "Haider",
+    "songFile": "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+    "year": 2014,
+    "hints": ["Shahid Kapoor", "Kashmir", "Hamlet", "Vishal Bhardwaj"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "movie_14",
+    "title": "Masaan",
+    "songFile": "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+    "year": 2015,
+    "hints": ["Vicky Kaushal", "Varanasi", "Death", "Independent Cinema"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "movie_15",
+    "title": "Stree",
+    "songFile": "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+    "year": 2018,
+    "hints": ["Rajkummar Rao", "Shraddha Kapoor", "Horror Comedy", "Chanderi"],
+    "difficulty": "easy"
+  }
+]
