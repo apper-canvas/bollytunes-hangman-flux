@@ -1,166 +1,244 @@
-import movies from '../mockData/movies.json'
+import { movieService } from './movieService'
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
-let currentGameId = 1
-let gameSession = {
-  totalGames: 0,
-  wins: 0,
-  losses: 0,
+// Game statistics storage
+let gameStats = {
+  totalScore: 0,
+  currentRound: 1,
+  gamesPlayed: 0,
+  moviesGuessed: 0,
+  averageScore: 0,
   currentStreak: 0,
-  highScore: 0
-}
-
-const generateGameId = () => {
-  return `game_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-}
-
-const getRandomMovie = () => {
-  if (!movies || movies.length === 0) {
-    throw new Error('No movies available')
-  }
-  const randomIndex = Math.floor(Math.random() * movies.length)
-  return { ...movies[randomIndex] }
-}
-
-const calculateScore = (wrongAttempts, movieLength) => {
-  const baseScore = 100
-  const lengthBonus = movieLength * 10
-  const wrongPenalty = wrongAttempts * 20
-  return Math.max(10, baseScore + lengthBonus - wrongPenalty)
+  bestStreak: 0
 }
 
 export const gameService = {
-  async startNewGame() {
-    await delay(300)
+  async startNewGame(continueRound = false) {
+    await delay(400)
     
     try {
-      const movie = getRandomMovie()
-      const gameId = generateGameId()
+      const randomMovie = await movieService.getRandomMovie()
       
-      const newGame = {
-        id: gameId,
-        currentMovie: movie,
-        guessedLetters: [],
-        wrongAttempts: 0,
-        gameStatus: 'playing', // playing, won, lost
-        score: 0,
-        startTime: Date.now()
+      if (!continueRound) {
+        gameStats.currentRound = 1
+        gameStats.totalScore = 0
+        gameStats.currentStreak = 0
       }
       
-      gameSession.totalGames += 1
-      
-      return { ...newGame }
+      return {
+        id: `game_${Date.now()}`,
+        currentMovie: randomMovie,
+        guessedLetters: [],
+        wrongAttempts: 0,
+        maxAttempts: 6,
+        gameStatus: 'playing', // 'playing', 'won', 'lost'
+        startTime: new Date().toISOString(),
+        hints: randomMovie.hints || [],
+        difficulty: randomMovie.difficulty || 'medium',
+        score: 0,
+        round: gameStats.currentRound,
+        totalScore: gameStats.totalScore,
+        stats: { ...gameStats }
+      }
     } catch (error) {
       throw new Error('Failed to start new game: ' + error.message)
     }
   },
 
-  async guessLetter(gameId, letter) {
-    await delay(250)
+  async guessLetter(gameId, letter, currentGameState) {
+    await delay(200)
     
     try {
-      if (!gameId || !letter) {
-        throw new Error('Game ID and letter are required')
+      if (!gameId || !letter || !currentGameState) {
+        throw new Error('Game ID, letter, and current game state are required')
       }
       
-      // In a real app, you'd fetch the current game state from storage
-      // For this demo, we'll simulate getting the current game
-      const movie = getRandomMovie() // This would be the current game's movie
+      const letterUpper = letter.toUpperCase()
+      const movieTitle = currentGameState.currentMovie.title.toUpperCase()
+      const isCorrectGuess = movieTitle.includes(letterUpper)
       
-      // Simulate current game state - in reality this would come from your game state management
-      const currentGame = {
-        id: gameId,
-        currentMovie: movie,
-        guessedLetters: [], // This would be the actual current guessed letters
-        wrongAttempts: 0, // This would be the actual current wrong attempts
-        gameStatus: 'playing',
-        score: 0
+      // Update guessed letters
+      const updatedGuessedLetters = [...currentGameState.guessedLetters, letterUpper]
+      
+      // Update wrong attempts
+      let updatedWrongAttempts = currentGameState.wrongAttempts
+      if (!isCorrectGuess) {
+        updatedWrongAttempts += 1
       }
       
-      const upperLetter = letter.toUpperCase()
-      const movieTitle = currentGame.currentMovie.title.toUpperCase()
-      
-      // Add letter to guessed letters
-      const newGuessedLetters = [...currentGame.guessedLetters, upperLetter]
-      
-      // Check if letter is correct
-      const isCorrect = movieTitle.includes(upperLetter)
-      let newWrongAttempts = currentGame.wrongAttempts
-      
-      if (!isCorrect) {
-        newWrongAttempts += 1
-      }
-      
-      // Check win condition
-      const titleLetters = movieTitle.replace(/[^A-Z]/g, '')
-      const guessedTitleLetters = titleLetters.split('').filter(char => 
-        newGuessedLetters.includes(char)
-      )
-      const hasWon = titleLetters.split('').every(char => 
-        newGuessedLetters.includes(char)
-      )
-      
-      // Check lose condition
-      const hasLost = newWrongAttempts >= 5
+      // Check if word is complete
+      const isWordComplete = movieTitle.split('').every(char => {
+        return !char.match(/[A-Z]/) || updatedGuessedLetters.includes(char)
+      })
       
       // Determine game status
       let gameStatus = 'playing'
-      let score = currentGame.score
-      
-      if (hasWon) {
+      if (isWordComplete) {
         gameStatus = 'won'
-        score = calculateScore(newWrongAttempts, movieTitle.length)
-        gameSession.wins += 1
-        gameSession.currentStreak += 1
-        if (score > gameSession.highScore) {
-          gameSession.highScore = score
+        gameStats.currentStreak += 1
+        gameStats.moviesGuessed += 1
+        if (gameStats.currentStreak > gameStats.bestStreak) {
+          gameStats.bestStreak = gameStats.currentStreak
         }
-      } else if (hasLost) {
+      } else if (updatedWrongAttempts >= currentGameState.maxAttempts) {
         gameStatus = 'lost'
-        gameSession.losses += 1
-        gameSession.currentStreak = 0
+        gameStats.currentStreak = 0
       }
       
-      const updatedGame = {
-        ...currentGame,
-        guessedLetters: newGuessedLetters,
-        wrongAttempts: newWrongAttempts,
+      // Calculate score for this round
+      let roundScore = 0
+      if (gameStatus === 'won') {
+        const baseScore = 100
+        const livesBonus = (currentGameState.maxAttempts - updatedWrongAttempts) * 20
+        const difficultyMultiplier = currentGameState.difficulty === 'hard' ? 2 : 
+                                   currentGameState.difficulty === 'medium' ? 1.5 : 1
+        roundScore = Math.floor((baseScore + livesBonus) * difficultyMultiplier)
+        gameStats.totalScore += roundScore
+      }
+      
+      // Update game statistics
+      if (gameStatus !== 'playing') {
+        gameStats.gamesPlayed += 1
+        gameStats.averageScore = Math.floor(gameStats.totalScore / gameStats.gamesPlayed)
+      }
+      
+      return {
+        ...currentGameState,
+        guessedLetters: updatedGuessedLetters,
+        wrongAttempts: updatedWrongAttempts,
         gameStatus,
-        score
+        score: roundScore,
+        totalScore: gameStats.totalScore,
+        stats: { ...gameStats }
       }
-      
-      return { ...updatedGame }
     } catch (error) {
       throw new Error('Failed to process guess: ' + error.message)
     }
   },
 
-  async getGameStats() {
-    await delay(200)
+  async getNextMovie() {
+    await delay(300)
     
     try {
-      return { ...gameSession }
+      const nextMovie = await movieService.getRandomMovie()
+      gameStats.currentRound += 1
+      
+      return {
+        id: `game_${Date.now()}`,
+        currentMovie: nextMovie,
+        guessedLetters: [],
+        wrongAttempts: 0,
+        maxAttempts: 6,
+        gameStatus: 'playing',
+        startTime: new Date().toISOString(),
+        hints: nextMovie.hints || [],
+        difficulty: nextMovie.difficulty || 'medium',
+        score: 0,
+        round: gameStats.currentRound,
+        totalScore: gameStats.totalScore,
+        stats: { ...gameStats }
+      }
     } catch (error) {
-      throw new Error('Failed to get game stats: ' + error.message)
+      throw new Error('Failed to get next movie: ' + error.message)
     }
   },
 
+  async getGameStats() {
+    await delay(150)
+    return { ...gameStats }
+  },
+
   async resetStats() {
-    await delay(200)
+    await delay(100)
+    gameStats = {
+      totalScore: 0,
+      currentRound: 1,
+      gamesPlayed: 0,
+      moviesGuessed: 0,
+      averageScore: 0,
+      currentStreak: 0,
+      bestStreak: 0
+    }
+    return { ...gameStats }
+  },
+
+  async getGameState(gameId) {
+    await delay(150)
     
     try {
-      gameSession = {
-        totalGames: 0,
-        wins: 0,
-        losses: 0,
-        currentStreak: 0,
-        highScore: 0
+      if (!gameId) {
+        throw new Error('Game ID is required')
       }
       
-      return { ...gameSession }
+      return {
+        id: gameId,
+        gameStatus: 'playing',
+        guessedLetters: [],
+        wrongAttempts: 0,
+        stats: { ...gameStats }
+      }
     } catch (error) {
-      throw new Error('Failed to reset stats: ' + error.message)
+      throw new Error('Failed to get game state: ' + error.message)
+    }
+  },
+
+  async saveScore(gameId, score) {
+    await delay(300)
+    
+    try {
+      if (!gameId || typeof score !== 'number') {
+        throw new Error('Game ID and valid score are required')
+      }
+      
+      const scoreEntry = {
+        gameId,
+        score,
+        timestamp: new Date().toISOString(),
+        stats: { ...gameStats }
+      }
+      
+      return scoreEntry
+    } catch (error) {
+      throw new Error('Failed to save score: ' + error.message)
+    }
+  },
+
+  async getLeaderboard() {
+    await delay(250)
+    
+    try {
+      const mockLeaderboard = [
+        { player: 'Bollywood Master', score: 2500, date: '2024-01-15', streak: 8 },
+        { player: 'Movie Buff', score: 2100, date: '2024-01-14', streak: 6 },
+        { player: 'Film Fanatic', score: 1800, date: '2024-01-13', streak: 5 },
+        { player: 'Cinema Lover', score: 1500, date: '2024-01-12', streak: 4 },
+        { player: 'Song Detective', score: 1200, date: '2024-01-11', streak: 3 }
+      ]
+      
+      return [...mockLeaderboard]
+    } catch (error) {
+      throw new Error('Failed to get leaderboard: ' + error.message)
+    }
+  },
+
+  async endGame(gameId, finalScore) {
+    await delay(300)
+    
+    try {
+      if (!gameId) {
+        throw new Error('Game ID is required')
+      }
+      
+      return {
+        gameId,
+        finalScore: finalScore || gameStats.totalScore,
+        endTime: new Date().toISOString(),
+        status: 'completed',
+        stats: { ...gameStats }
+      }
+    } catch (error) {
+throw new Error('Failed to end game: ' + error.message)
     }
   }
 }
