@@ -17,11 +17,11 @@ import React from 'react'
         return (
           <div className="text-center">
             <motion.div
-              className="text-6xl mb-4"
+className="text-6xl mb-4"
               key={stageIndex}
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
-              transition={{ duration: 0.6, ease: "back.out" }}
+              transition={{ duration: 0.6, ease: "backOut" }}
             >
               {stage?.emoji}
             </motion.div>
