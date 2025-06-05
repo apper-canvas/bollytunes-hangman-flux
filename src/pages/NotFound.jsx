@@ -10,7 +10,7 @@ const NotFound = () => {
 <motion.div
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.8, ease: "backOut" }}
+          transition={{ duration: 0.8, ease: "anticipate" }}
           className="mb-8"
         >
           <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center shadow-bollywood">

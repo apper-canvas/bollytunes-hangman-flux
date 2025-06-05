@@ -11,9 +11,9 @@ function App() {
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-10 left-10 text-4xl animate-float opacity-20">🎬</div>
-        <div className="absolute top-32 right-20 text-3xl animate-float delay-1000 opacity-20">🎵</div>
+<div className="absolute top-32 right-20 text-3xl animate-float delay-1000 opacity-20">🎵</div>
         <div className="absolute bottom-20 left-20 text-5xl animate-float delay-2000 opacity-20">⭐</div>
-<div className="absolute bottom-40 right-10 text-3xl animate-float delay-1500 opacity-20">🎭</div>
+        <div className="absolute bottom-40 right-10 text-3xl animate-float delay-1500 opacity-20">🎭</div>
         <div className="absolute top-1/2 left-1/4 text-2xl animate-float delay-500 opacity-20">🎪</div>
         <div className="absolute top-3/4 right-1/3 text-4xl animate-float delay-3000 opacity-20">🎨</div>
       </div>
